@@ -1,0 +1,37 @@
+version: '3.9'
+services:
+  mongo:
+    image: mongo:4
+    container_name: subathontimer-mongo
+    restart: unless-stopped
+    volumes:
+      - db:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=subathontimer
+      - MONGO_INITDB_ROOT_PASSWORD="${SUBATHONTIMER_DB_PASS}"
+      - MONGO_INITDB_DATABASE=subathontimer
+    networks:
+      - subathontimer-network
+  app:
+    depends_on:
+      - mongo
+    container_name: subathontimer
+    restart: unless-stopped
+    image: "registry.davicoelho.com/subathon-timer/timer:${SUBATHONTIMER_TAG}"
+    labels:
+      - traefik.http.routers.subathontimer.rule=Host(`subathontimer.davicoelho.com`)
+      - traefik.http.routers.subathontimer.tls=true
+      - traefik.http.routers.subathontimer.tls.certresolver=lets-encrypt
+      - traefik.port=80
+    networks:
+      - subathontimer-network
+      - web
+volumes:
+  db:
+
+networks:
+  web:
+    external: true
+  subathontimer-network:
+    name: subathontimer-network
+    external: false
