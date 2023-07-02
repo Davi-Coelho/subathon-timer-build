@@ -8,7 +8,7 @@ services:
       - db:/data/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=subathontimer
-      - MONGO_INITDB_ROOT_PASSWORD=${SUBATHONTIMER_DB_PASS}
+      - MONGO_INITDB_ROOT_PASSWORD=SUBATHONTIMER_DB_PASS
       - MONGO_INITDB_DATABASE=subathontimer
     networks:
       - subathontimer-network
@@ -17,7 +17,7 @@ services:
       - mongo
     container_name: subathontimer
     restart: unless-stopped
-    image: registry.davicoelho.com/subathon-timer/timer:${SUBATHONTIMER_TAG}
+    image: registry.davicoelho.com/subathon-timer/timer:SUBATHONTIMER_TAG
     labels:
       - traefik.http.routers.subathontimer.rule=Host(`subathontimer.davicoelho.com`)
       - traefik.http.routers.subathontimer.tls=true
